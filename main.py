@@ -1,7 +1,8 @@
 import os
-import requests
+import re
 from urllib.parse import urlencode
 
+import requests
 from flask import Flask, abort, request
 
 from linebot import LineBotApi, WebhookHandler
