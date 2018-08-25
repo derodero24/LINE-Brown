@@ -1,5 +1,5 @@
 import os
-# import requests
+import requests
 from urllib.parse import urlencode
 
 from flask import Flask, abort, request
@@ -34,8 +34,9 @@ def tranlation(text):
         'source': 'ja',
         'target': 'en'
     })
-
-    return 'english'
+    url = TRANSLATION_URL + '?' + params
+    reply = requests.get(url).text
+    return reply
 
 
 @app.route("/callback", methods=['POST'])
