@@ -18,10 +18,10 @@ line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
 
-def is_ascii(string):
+def is_ascii(str):
     '''半角文字列の判定'''
-    if string:
-        return max([ord(char) for char in string]) < 128
+    if str:
+        return max([ord(char) for char in str]) < 128
     return False
 
 
@@ -45,7 +45,7 @@ def handle_message(event):
     '''返信'''
     text = event.message.text
 
-    if is_ascii(string):  # 英語翻訳
+    if is_ascii(text):  # 英語翻訳
         reply = 'english'
     else:
         return
