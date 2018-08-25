@@ -31,8 +31,8 @@ def tranlation(text):
     '''翻訳'''
     params = urlencode({
         'text': text,
-        'source': 'ja',
-        'target': 'en'
+        'source': 'en',
+        'target': 'ja'
     })
     url = TRANSLATION_URL + '?' + params
     reply = requests.get(url).text
