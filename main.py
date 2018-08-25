@@ -61,8 +61,8 @@ def handle_message(event):
 
     if is_ascii(text):  # 英語翻訳
         reply = tranlation(text)
-
     else:
+        print('例外')
         return
 
     line_bot_api.reply_message(
