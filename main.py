@@ -1,12 +1,8 @@
-import abort
-import Flask
-import InvalidSignatureError
-import LineBotApi
-import MessageEvent
-import request
-import TextMessage
-import TextSendMessage
-import WebhookHandler
+from flask import Flask, abort, request
+
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 app = Flask(__name__)
 
@@ -15,22 +11,21 @@ handler = WebhookHandler('YOUR_CHANNEL_SECRET')
 
 
 @app.route("/callback", methods=['POST'])
-def callback():  # get X - Line - Signature header value
+def callback():
+    # get X-Line-Signature header value
+    signature = request.headers['X-Line-Signature']
 
+    # get request body as text
+    body = request.get_data(as_text=True)
+    app.logger.info("Request body: " + body)
 
-signature = request.headers['X-Line-Signature']
+    # handle webhook body
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        abort(400)
 
-# get request body as text
-body = request.get_data(as_text=True)
-app.logger.info("Request body: " + body)
-
-# handle webhook body
-try:
-handler.handle(body, signature)
-except InvalidSignatureError:
-    abort(400)
-
-return 'OK'
+    return 'OK'
 
 
 @handler.add(MessageEvent, message=TextMessage)
