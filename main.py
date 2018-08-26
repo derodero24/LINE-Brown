@@ -17,9 +17,9 @@ app = Flask(__name__)
 # 環境変数取得
 CHANNEL_ACCESS_TOKEN = os.environ['CHANNEL_ACCESS_TOKEN']
 CHANNEL_SECRET = os.environ['CHANNEL_SECRET']
-TRANSLATION_URL = os.environ['TRANSLATION_URL']
-CHAT_API_URL = os.environ['CHAT_API_URL']
-CHAT_API_KEY = os.environ['CHAT_API_KEY']
+# TRANSLATION_URL = os.environ['TRANSLATION_URL']
+# CHAT_API_URL = os.environ['CHAT_API_URL']
+# CHAT_API_KEY = os.environ['CHAT_API_KEY']
 
 # api,handler作成
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
@@ -38,7 +38,8 @@ def is_ascii(str):
 
 def get_image(message_id):
     url = 'https://trialbot-api.line.me/v1/bot/message/' + message_id + '/content'
-
+    headers = {'Authorization': CHANNEL_ACCESS_TOKEN}
+    requests.get(url, headers=headers)
 
 # def tranlation(text):
 #     '''翻訳'''
