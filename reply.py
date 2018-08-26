@@ -39,7 +39,8 @@ def age_gender(data):
     if data == b'[]':
         return 'お顔が見当たんないよ？'
     json_ = json.loads(data)
+    face_info = json_[0]['faceAttributes']
     gender_dic = {'male': '男性', 'female': '女性'}
-    gender = gender_dic[json_[0]['gender']]
-    age = str(int(json_[0]['age']))
+    gender = gender_dic[face_info['gender']]
+    age = str(int(face_info['age']))
     return age + ' ' + gender
