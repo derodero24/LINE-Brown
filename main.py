@@ -44,34 +44,37 @@ def handle_message(event):
     '''テキストメッセージのとき'''
     text = event.message.text
     print('text :', text)
+    rep = ''
     if tools.is_ascii(text):  # 英語翻訳
         rep = reply.tranlation(text)
-        print('reply :', rep)
     elif text:
         rep = reply.chat(text)
-        print('reply :', rep)
     else:
         print('例外')
         return
 
+    print('reply :', rep)
+
     # 送信
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=rep))
+    if not rep == '':
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=rep))
 
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
     '''画像のとき'''
     id = event.message.id
-    image_content = line_bot_api.get_message_content(id)
-    data = tools.face_api(image_content.content)
+    image = line_bot_api.get_message_content(id)
+    data = tools.face_api(image.content)
     rep = reply.age_gender(data)
 
     # 送信
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=rep))
+    if not rep == '':
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=rep))
 
 
 if __name__ == "__main__":
