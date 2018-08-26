@@ -1,15 +1,15 @@
 import os
-import re
 
 from flask import Flask, abort, request
 
-# from urllib.parse import urlencode
-#
-# import requests
 import reply
+import tools
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+
+# import re
+
 
 # アプリ作成
 app = Flask(__name__)
@@ -17,51 +17,26 @@ app = Flask(__name__)
 # 環境変数取得
 CHANNEL_ACCESS_TOKEN = os.environ['CHANNEL_ACCESS_TOKEN']
 CHANNEL_SECRET = os.environ['CHANNEL_SECRET']
-# TRANSLATION_URL = os.environ['TRANSLATION_URL']
-# CHAT_API_URL = os.environ['CHAT_API_URL']
-# CHAT_API_KEY = os.environ['CHAT_API_KEY']
 
 # api,handler作成
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 
 
-def is_ascii(str):
-    '''半角文字列の判定'''
-    boolean = False
-    if str:
-        boolean = max([ord(char) for char in str]) < 128
-    if not boolean:
-        boolean = re.search(r'[’]+', str) is not None
-    return boolean
+# def is_ascii(str):
+#     '''半角文字列の判定'''
+#     boolean = False
+#     if str:
+#         boolean = max([ord(char) for char in str]) < 128
+#     if not boolean:
+#         boolean = re.search(r'[’]+', str) is not None
+#     return boolean
 
 
 def get_image(message_id):
     url = 'https://trialbot-api.line.me/v1/bot/message/' + message_id + '/content'
     headers = {'Authorization': CHANNEL_ACCESS_TOKEN}
     requests.get(url, headers=headers)
-
-# def tranlation(text):
-#     '''翻訳'''
-#     params = urlencode({
-#         'text': text,
-#         'source': 'en',
-#         'target': 'ja'
-#     })
-#     url = TRANSLATION_URL + '?' + params
-#     reply = requests.get(url).text
-#     return reply
-#
-#
-# def chat(text):
-#     '''雑談'''
-#     params = urlencode({
-#         'key': CHAT_API_KEY,
-#         'message': text
-#     })
-#     url = CHAT_API_URL + '?' + params
-#     reply = requests.get(url).json()
-#     return reply['result']
 
 
 @app.route("/callback", methods=['POST'])
@@ -88,7 +63,7 @@ def handle_message(event):
     if type == 'text':  # テキスト
         text = event.message.text
         print('text :', text)
-        if is_ascii(text):  # 英語翻訳
+        if tools.is_ascii(text):  # 英語翻訳
             rep = reply.tranlation(text)
             print('reply :', rep)
         elif text:
