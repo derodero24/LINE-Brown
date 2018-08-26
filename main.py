@@ -33,8 +33,9 @@ def is_ascii(str):
         boolean = re.search(r'[’]+', str) is not None
     return boolean
 
-# def get_image():
 
+def get_image(message_id):
+    url = 'https://trialbot-api.line.me/v1/bot/message/' + message_id + '/content'
 
 
 def tranlation(text):
@@ -47,7 +48,6 @@ def tranlation(text):
     url = TRANSLATION_URL + '?' + params
     reply = requests.get(url).text
     return reply
-
 
 
 def chat(text):
@@ -93,24 +93,11 @@ def handle_message(event):
             print('reply :', reply)
         else:
 
-    # elif type == 'image':  # 画像
-    #
-    # else:  # その他
-    #     print('例外')
-    #     return
-
-    text = event.message.text
-    print('text :', text)
-
-    if is_ascii(text):  # 英語翻訳
-        reply = tranlation(text)
-        print('reply :', reply)
-    elif text:
-        reply = chat(text)
-        print('reply :', reply)
-    else:
-        print('例外')
-        return
+            # elif type == 'image':  # 画像
+            #
+            # else:  # その他
+            #     print('例外')
+            #     return
 
     # 送信
     line_bot_api.reply_message(
