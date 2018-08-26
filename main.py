@@ -7,7 +7,8 @@ import reply
 import tools
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage, ImageMessage
+from linebot.models import (ImageMessage, MessageEvent, TextMessage,
+                            TextSendMessage)
 
 # アプリ作成
 app = Flask(__name__)
@@ -21,15 +22,9 @@ line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 
 
-# def get_image(message_id):
-#     '''画像取得'''
-#     url = 'https://trialbot-api.line.me/v1/bot/message/' + message_id + '/content'
-#     headers = {'Authorization': CHANNEL_ACCESS_TOKEN}
-#     requests.get(url, headers=headers)
-
-
 @app.route("/callback", methods=['POST'])
 def callback():
+    '''毎回最初に実行'''
     signature = request.headers['X-Line-Signature']
 
     body = request.get_data(as_text=True)
@@ -69,10 +64,14 @@ def handle_message(event):
 def handle_image(event):
     '''画像のとき'''
     message_id = event.message.id
-    message_content = line_bot_api.get_message_content(message_id)
+    image_content = line_bot_api.get_message_content(message_id)
+    data = tools.face_api(image_content.content)
+    rep = reply.age_gender(data)
 
-    image = BytesIO(message_content.content)
-    print(message_content.content)
+    # 送信
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=rep))
 
 
 if __name__ == "__main__":

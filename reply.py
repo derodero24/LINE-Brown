@@ -31,3 +31,14 @@ def chat(text):
     url = CHAT_API_URL + '?' + params
     reply = requests.get(url).json()
     return reply['result']
+
+
+def age_gender(data):
+    '''年齢＆性別'''
+    if data == b'[]':
+        return ''
+    json_ = json.loads(data)
+    gender_dic = {'male': '男性', 'female': '女性'}
+    gender = gender_dic[json_['gender']]
+    age = str(int(json_['age']))
+    return age + ' ' + gender
