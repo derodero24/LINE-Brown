@@ -92,6 +92,8 @@ def handle_message(event):
             reply = chat(text)
             print('reply :', reply)
         else:
+            print('例外')
+            return
 
             # elif type == 'image':  # 画像
             #
