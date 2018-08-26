@@ -33,8 +33,6 @@ def is_ascii(str):
         boolean = re.search(r'[’]+', str) is not None
     return boolean
 
-def get_image()
-
 
 def tranlation(text):
     '''翻訳'''
