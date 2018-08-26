@@ -1,4 +1,5 @@
 import os
+from io import BytesIO
 
 from flask import Flask, abort, request
 
@@ -6,10 +7,7 @@ import reply
 import tools
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
-
-# import re
-
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, ImageMessage
 
 # アプリ作成
 app = Flask(__name__)
@@ -23,20 +21,11 @@ line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 
 
-# def is_ascii(str):
-#     '''半角文字列の判定'''
-#     boolean = False
-#     if str:
-#         boolean = max([ord(char) for char in str]) < 128
-#     if not boolean:
-#         boolean = re.search(r'[’]+', str) is not None
-#     return boolean
-
-
-def get_image(message_id):
-    url = 'https://trialbot-api.line.me/v1/bot/message/' + message_id + '/content'
-    headers = {'Authorization': CHANNEL_ACCESS_TOKEN}
-    requests.get(url, headers=headers)
+# def get_image(message_id):
+#     '''画像取得'''
+#     url = 'https://trialbot-api.line.me/v1/bot/message/' + message_id + '/content'
+#     headers = {'Authorization': CHANNEL_ACCESS_TOKEN}
+#     requests.get(url, headers=headers)
 
 
 @app.route("/callback", methods=['POST'])
@@ -45,6 +34,7 @@ def callback():
 
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
+    print(body)
 
     try:
         handler.handle(body, signature)
@@ -56,33 +46,33 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    '''返信'''
-    print(event)
-
-    type = event.message.type
-    if type == 'text':  # テキスト
-        text = event.message.text
-        print('text :', text)
-        if tools.is_ascii(text):  # 英語翻訳
-            rep = reply.tranlation(text)
-            print('reply :', rep)
-        elif text:
-            rep = reply.chat(text)
-            print('reply :', rep)
-        else:
-            print('例外')
-            return
-
-            # elif type == 'image':  # 画像
-            #
-            # else:  # その他
-            #     print('例外')
-            #     return
+    '''テキストメッセージのとき'''
+    text = event.message.text
+    print('text :', text)
+    if tools.is_ascii(text):  # 英語翻訳
+        rep = reply.tranlation(text)
+        print('reply :', rep)
+    elif text:
+        rep = reply.chat(text)
+        print('reply :', rep)
+    else:
+        print('例外')
+        return
 
     # 送信
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=rep))
+
+
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_image(event):
+    '''画像のとき'''
+    message_id = event.message.id
+    message_content = line_bot_api.get_message_content(message_id)
+
+    image = BytesIO(message_content.content)
+    print('got it')
 
 
 if __name__ == "__main__":
