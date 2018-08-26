@@ -13,15 +13,15 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 app = Flask(__name__)
 
 # 環境変数取得
-YOUR_CHANNEL_ACCESS_TOKEN = os.environ['YOUR_CHANNEL_ACCESS_TOKEN']
-YOUR_CHANNEL_SECRET = os.environ['YOUR_CHANNEL_SECRET']
+CHANNEL_ACCESS_TOKEN = os.environ['CHANNEL_ACCESS_TOKEN']
+CHANNEL_SECRET = os.environ['CHANNEL_SECRET']
 TRANSLATION_URL = os.environ['TRANSLATION_URL']
 CHAT_API_URL = os.environ['CHAT_API_URL']
 CHAT_API_KEY = os.environ['CHAT_API_KEY']
 
 # api,handler作成
-line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(YOUR_CHANNEL_SECRET)
+line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+handler = WebhookHandler(CHANNEL_SECRET)
 
 
 def is_ascii(str):
@@ -32,6 +32,8 @@ def is_ascii(str):
     if not boolean:
         boolean = re.search(r'[’]+', str) is not None
     return boolean
+
+def get_image()
 
 
 def tranlation(text):
@@ -76,6 +78,25 @@ def callback():
 def handle_message(event):
     '''返信'''
     print(event)
+
+    type = event.message.type
+    if type == 'text':  # テキスト
+        text = event.message.text
+        print('text :', text)
+        if is_ascii(text):  # 英語翻訳
+            reply = tranlation(text)
+            print('reply :', reply)
+        elif text:
+            reply = chat(text)
+            print('reply :', reply)
+        else:
+
+    elif type == 'image':  # 画像
+
+    else:  # その他
+        print('例外')
+        return
+
     text = event.message.text
     print('text :', text)
 
@@ -89,6 +110,7 @@ def handle_message(event):
         print('例外')
         return
 
+    # 送信
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=reply))
