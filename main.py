@@ -1,10 +1,12 @@
 import os
 import re
-from urllib.parse import urlencode
 
-import requests
 from flask import Flask, abort, request
 
+# from urllib.parse import urlencode
+#
+# import requests
+import reply
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
@@ -38,27 +40,27 @@ def get_image(message_id):
     url = 'https://trialbot-api.line.me/v1/bot/message/' + message_id + '/content'
 
 
-def tranlation(text):
-    '''翻訳'''
-    params = urlencode({
-        'text': text,
-        'source': 'en',
-        'target': 'ja'
-    })
-    url = TRANSLATION_URL + '?' + params
-    reply = requests.get(url).text
-    return reply
-
-
-def chat(text):
-    '''雑談'''
-    params = urlencode({
-        'key': CHAT_API_KEY,
-        'message': text
-    })
-    url = CHAT_API_URL + '?' + params
-    reply = requests.get(url).json()
-    return reply['result']
+# def tranlation(text):
+#     '''翻訳'''
+#     params = urlencode({
+#         'text': text,
+#         'source': 'en',
+#         'target': 'ja'
+#     })
+#     url = TRANSLATION_URL + '?' + params
+#     reply = requests.get(url).text
+#     return reply
+#
+#
+# def chat(text):
+#     '''雑談'''
+#     params = urlencode({
+#         'key': CHAT_API_KEY,
+#         'message': text
+#     })
+#     url = CHAT_API_URL + '?' + params
+#     reply = requests.get(url).json()
+#     return reply['result']
 
 
 @app.route("/callback", methods=['POST'])
@@ -86,11 +88,11 @@ def handle_message(event):
         text = event.message.text
         print('text :', text)
         if is_ascii(text):  # 英語翻訳
-            reply = tranlation(text)
-            print('reply :', reply)
+            rep = reply.tranlation(text)
+            print('reply :', rep)
         elif text:
-            reply = chat(text)
-            print('reply :', reply)
+            rep = reply.chat(text)
+            print('reply :', rep)
         else:
             print('例外')
             return
@@ -104,7 +106,7 @@ def handle_message(event):
     # 送信
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=reply))
+        TextSendMessage(text=rep))
 
 
 if __name__ == "__main__":
