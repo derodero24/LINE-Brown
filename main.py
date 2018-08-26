@@ -47,6 +47,7 @@ def tranlation(text):
 
 
 def chat(text):
+    '''雑談'''
     params = urlencode({
         'key': CHAT_API_KEY,
         'message': text
@@ -54,7 +55,6 @@ def chat(text):
     url = CHAT_API_URL + '?' + params
     reply = requests.get(url).json()
     return reply['result']
-
 
 
 @app.route("/callback", methods=['POST'])
@@ -80,8 +80,10 @@ def handle_message(event):
 
     if is_ascii(text):  # 英語翻訳
         reply = tranlation(text)
+        print(reply)
     elif text:
         reply = chat(text)
+        print(reply)
     else:
         print('例外')
         return
