@@ -37,7 +37,7 @@ def chat(text):
 def age_gender(data):
     '''年齢＆性別'''
     if data == b'[]':
-        return ''
+        return 'お顔が見当たんないよ？'
     json_ = json.loads(data)
     gender_dic = {'male': '男性', 'female': '女性'}
     gender = gender_dic[json_['gender']]

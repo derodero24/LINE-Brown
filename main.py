@@ -71,10 +71,9 @@ def handle_image(event):
     rep = reply.age_gender(data)
 
     # 送信
-    if not rep == '':
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=rep))
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=rep))
 
 
 if __name__ == "__main__":
