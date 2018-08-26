@@ -43,4 +43,4 @@ def age_gender(data):
     gender_dic = {'male': '男性', 'female': '女性'}
     gender = gender_dic[face_info['gender']]
     age = str(int(face_info['age']))
-    return age + ' ' + gender
+    return age + '歳 ' + gender
