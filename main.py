@@ -9,12 +9,15 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
+# アプリ作成
 app = Flask(__name__)
 
 # 環境変数取得
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ['YOUR_CHANNEL_ACCESS_TOKEN']
 YOUR_CHANNEL_SECRET = os.environ['YOUR_CHANNEL_SECRET']
 TRANSLATION_URL = os.environ['TRANSLATION_URL']
+CHAT_API_URL = os.environ['CHAT_API_URL']
+CHAT_API_KEY = os.environ['CHAT_API_KEY']
 
 # api,handler作成
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
@@ -43,6 +46,17 @@ def tranlation(text):
     return reply
 
 
+def chat(text):
+    params = urlencode({
+        'key': CHAT_API_KEY,
+        'message': text
+    })
+    url = CHAT_API_URL + '?' + params
+    reply = requests.get(url).json()
+    return reply['result']
+
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -65,6 +79,8 @@ def handle_message(event):
 
     if is_ascii(text):  # 英語翻訳
         reply = tranlation(text)
+    elif text:
+        reply = chat(text)
     else:
         print('例外')
         return
