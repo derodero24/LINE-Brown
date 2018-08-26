@@ -76,6 +76,7 @@ def callback():
 def handle_message(event):
     '''返信'''
     text = event.message.text
+    print(text)
 
     if is_ascii(text):  # 英語翻訳
         reply = tranlation(text)
