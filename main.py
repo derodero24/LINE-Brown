@@ -33,6 +33,9 @@ def is_ascii(str):
         boolean = re.search(r'[’]+', str) is not None
     return boolean
 
+# def get_image():
+
+
 
 def tranlation(text):
     '''翻訳'''
@@ -44,6 +47,7 @@ def tranlation(text):
     url = TRANSLATION_URL + '?' + params
     reply = requests.get(url).text
     return reply
+
 
 
 def chat(text):
@@ -89,11 +93,11 @@ def handle_message(event):
             print('reply :', reply)
         else:
 
-    elif type == 'image':  # 画像
-
-    else:  # その他
-        print('例外')
-        return
+    # elif type == 'image':  # 画像
+    #
+    # else:  # その他
+    #     print('例外')
+    #     return
 
     text = event.message.text
     print('text :', text)
