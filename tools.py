@@ -34,7 +34,9 @@ def face_api(bynary):
     })
     url = FACE_API_URL + '?' + params
     res = requests.post(url, data=bynary, headers=headers)
-    return res.content
+    content = res.content
+    print(content)
+    return content
 
 
 # def display_expression(data, bynary):

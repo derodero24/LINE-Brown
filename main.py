@@ -63,8 +63,8 @@ def handle_message(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
     '''画像のとき'''
-    message_id = event.message.id
-    image_content = line_bot_api.get_message_content(message_id)
+    id = event.message.id
+    image_content = line_bot_api.get_message_content(id)
     data = tools.face_api(image_content.content)
     rep = reply.age_gender(data)
 
