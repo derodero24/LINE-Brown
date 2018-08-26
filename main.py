@@ -76,14 +76,14 @@ def callback():
 def handle_message(event):
     '''返信'''
     text = event.message.text
-    print(text)
+    print('text :', text)
 
     if is_ascii(text):  # 英語翻訳
         reply = tranlation(text)
-        print(reply)
+        print('reply :', reply)
     elif text:
         reply = chat(text)
-        print(reply)
+        print('reply :', reply)
     else:
         print('例外')
         return
