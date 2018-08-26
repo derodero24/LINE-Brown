@@ -72,7 +72,7 @@ def handle_image(event):
     message_content = line_bot_api.get_message_content(message_id)
 
     image = BytesIO(message_content.content)
-    print('got it')
+    print(image)
 
 
 if __name__ == "__main__":
