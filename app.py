@@ -59,7 +59,6 @@ def handle_image(event):
     id = event.message.id
     image = line_bot_api.get_message_content(id)
     data = reply.face_api(image.content)
-    # reply.display_expression(data, image.content)
     rep = reply.age_gender(data)
     print(f'reply: {rep}')
 
